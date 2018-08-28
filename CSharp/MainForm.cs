@@ -76,23 +76,51 @@ namespace TwainExtendedImageInfoDemo
         {
             SetFormUiState(false);
 
-            // try to find the device manager 2.x
-            _deviceManager.IsTwain2Compatible = true;
-            // if TWAIN device manager 2.x is NOT available
-            if (!_deviceManager.IsTwainAvailable)
+            try
             {
-                // try to find the device manager 1.x
+                // try to find the device manager 2.x
                 _deviceManager.IsTwain2Compatible = true;
-                // if TWAIN device manager 1.x is NOT available
+                // if TWAIN device manager 2.x is NOT available
                 if (!_deviceManager.IsTwainAvailable)
                 {
-                    MessageBox.Show("TWAIN device manager is not found.");
+                    // try to find the device manager 1.x
+                    _deviceManager.IsTwain2Compatible = true;
+                    // if TWAIN device manager 1.x is NOT available
+                    if (!_deviceManager.IsTwainAvailable)
+                    {
+                        MessageBox.Show("TWAIN device manager is not found.");
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // show dialog with error message
+                MessageBox.Show(ex.Message, "TWAIN device manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            // if 64-bit TWAIN2 device manager is used
+            if (IntPtr.Size == 8 && _deviceManager.IsTwain2Compatible)
+            {
+                if (!InitTwain2DeviceManagerMode())
+                {
+                    MessageBox.Show("TWAIN device manager is not opened.");
                     return false;
                 }
             }
 
-            // open the device manager
-            _deviceManager.Open();
+            try
+            {
+                // open the device manager
+                _deviceManager.Open();
+            }
+            catch (Exception ex)
+            {
+                // show dialog with error message
+                MessageBox.Show(ex.Message, "TWAIN device manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
 
             // if no devices are found in the system
             if (_deviceManager.Devices.Count == 0)
@@ -105,18 +133,64 @@ namespace TwainExtendedImageInfoDemo
             return true;
         }
 
+        /// <summary>
+        /// Initializes the device manager mode.
+        /// </summary>
+        private bool InitTwain2DeviceManagerMode()
+        {
+            // create a form that allows to view and edit mode of 64-bit TWAIN2 device manager
+            using (SelectDeviceManagerModeForm form = new SelectDeviceManagerModeForm())
+            {
+                // initialize form
+                form.StartPosition = FormStartPosition.CenterParent;
+                form.Owner = this;
+                form.Use32BitDevices = _deviceManager.Are32BitDevicesUsed;
+
+                // show dialog
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    // if device manager mode is changed
+                    if (form.Use32BitDevices != _deviceManager.Are32BitDevicesUsed)
+                    {
+                        try
+                        {
+                            // if 32-bit devices must be used
+                            if (form.Use32BitDevices)
+                                _deviceManager.Use32BitDevices();
+                            else
+                                _deviceManager.Use64BitDevices();
+                        }
+                        catch (TwainDeviceManagerException ex)
+                        {
+                            // show dialog with error message
+                            MessageBox.Show(ex.Message, "TWAIN device manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Acquires image.
         /// </summary>
         private void acquireImageButton_Click(object sender, EventArgs e)
         {
+            acquireImageButton.Enabled = false;
             try
             {
                 // select the default device
                 if (!_deviceManager.ShowDefaultDeviceSelectionDialog())
                 {
                     MessageBox.Show("Device is not selected.");
+                    acquireImageButton.Enabled = true;
                     return;
                 }
 
@@ -144,6 +218,7 @@ namespace TwainExtendedImageInfoDemo
                     // close the device
                     device.Close();
                     MessageBox.Show("Device does not support extended image information.");
+                    acquireImageButton.Enabled = true;
                     return;
                 }
 
@@ -156,6 +231,7 @@ namespace TwainExtendedImageInfoDemo
             catch (TwainException ex)
             {
                 MessageBox.Show(ex.Message, "Error");
+                acquireImageButton.Enabled = true;
             }
         }
 
@@ -225,6 +301,8 @@ namespace TwainExtendedImageInfoDemo
         {
             // close the device
             _currentDevice.Close();
+
+            acquireImageButton.Enabled = true;
         }
 
 

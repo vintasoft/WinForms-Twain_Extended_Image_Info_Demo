@@ -115,6 +115,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.acquireImageButton);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VintaSoft TWAIN Extended Image Info Demo";
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
