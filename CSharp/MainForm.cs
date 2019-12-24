@@ -32,7 +32,7 @@ namespace TwainExtendedImageInfoDemo
             this.Text = String.Format("VintaSoft TWAIN Extended Image Info Demo v{0}", TwainGlobalSettings.ProductVersion);
 
             // create instance of the DeviceManager class
-            _deviceManager = new DeviceManager(this);
+            _deviceManager = new DeviceManager(this, this.Handle);
         }
 
         #endregion
@@ -84,7 +84,7 @@ namespace TwainExtendedImageInfoDemo
                 if (!_deviceManager.IsTwainAvailable)
                 {
                     // try to find the device manager 1.x
-                    _deviceManager.IsTwain2Compatible = true;
+                    _deviceManager.IsTwain2Compatible = false;
                     // if TWAIN device manager 1.x is NOT available
                     if (!_deviceManager.IsTwainAvailable)
                     {
@@ -96,7 +96,7 @@ namespace TwainExtendedImageInfoDemo
             catch (Exception ex)
             {
                 // show dialog with error message
-                MessageBox.Show(ex.Message, "TWAIN device manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(GetFullExceptionMessage(ex), "TWAIN device manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -118,7 +118,7 @@ namespace TwainExtendedImageInfoDemo
             catch (Exception ex)
             {
                 // show dialog with error message
-                MessageBox.Show(ex.Message, "TWAIN device manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(GetFullExceptionMessage(ex), "TWAIN device manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -163,7 +163,7 @@ namespace TwainExtendedImageInfoDemo
                         catch (TwainDeviceManagerException ex)
                         {
                             // show dialog with error message
-                            MessageBox.Show(ex.Message, "TWAIN device manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(GetFullExceptionMessage(ex), "TWAIN device manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                             return false;
                         }
@@ -230,7 +230,7 @@ namespace TwainExtendedImageInfoDemo
             }
             catch (TwainException ex)
             {
-                MessageBox.Show(ex.Message, "Error");
+                MessageBox.Show(GetFullExceptionMessage(ex), "Error");
                 acquireImageButton.Enabled = true;
             }
         }
@@ -444,6 +444,25 @@ namespace TwainExtendedImageInfoDemo
             _deviceManager.Close();
             // dispose the device manager
             _deviceManager.Dispose();
+        }
+
+        /// <summary>
+        /// Returns the message of exception and inner exceptions.
+        /// </summary>
+        private string GetFullExceptionMessage(Exception ex)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.AppendLine(ex.Message);
+
+            Exception innerException = ex.InnerException;
+            while (innerException != null)
+            {
+                if (ex.Message != innerException.Message)
+                    sb.AppendLine(string.Format("Inner exception: {0}", innerException.Message));
+                innerException = innerException.InnerException;
+            }
+
+            return sb.ToString();
         }
 
         #endregion
