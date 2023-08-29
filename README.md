@@ -4,7 +4,7 @@ This WinForms project uses <a href="https://www.vintasoft.com/vstwain-dotnet-ind
 
 
 ## Screenshot
-<img src="vintasoft-twain-extended-image-info-demo.png" alt="VintaSoft TWAIN Extended Image Info Demo">
+<img src="vintasoft-twain-extended-image-info-demo.png" title="VintaSoft TWAIN Extended Image Info Demo">
 
 ## Usage
 1. Get the 30 day free evaluation license for <a href="https://www.vintasoft.com/vstwain-dotnet-index.html" target="_blank">VintaSoft TWAIN .NET SDK</a> as described here: <a href="https://www.vintasoft.com/docs/vstwain-dotnet/Licensing-Twain-Evaluation.html" target="_blank">https://www.vintasoft.com/docs/vstwain-dotnet/Licensing-Twain-Evaluation.html</a>
