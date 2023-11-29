@@ -14,9 +14,9 @@ This WinForms project uses <a href="https://www.vintasoft.com/vstwain-dotnet-ind
    Vintasoft.Twain.TwainGlobalSettings.Register("REG_USER", "REG_EMAIL", "EXPIRATION_DATE", "REG_CODE");
    ```
 
-3. Build the project ("TwainExtendedImageInfoDemo.Net7.csproj" file) in Visual Studio or using .NET CLI:
+3. Build the project ("TwainExtendedImageInfoDemo.Net8.csproj" file) in Visual Studio or using .NET CLI:
    ```
-   dotnet build TwainExtendedImageInfoDemo.Net7.csproj
+   dotnet build TwainExtendedImageInfoDemo.Net8.csproj
    ```
 
 4. Run compiled application.
