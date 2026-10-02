@@ -28,6 +28,9 @@ namespace TwainExtendedImageInfoDemo
 
         public MainForm()
         {
+            // register the evaluation license for VintaSoft Twain .NET SDK
+            Vintasoft.WinTwain.TwainGlobalSettings.Register("REG_USER", "REG_EMAIL", "EXPIRATION_DATE", "REG_CODE");
+
             InitializeComponent();
 
             this.Text = String.Format("VintaSoft TWAIN Extended Image Info Demo v{0}", TwainEnvironment.ProductVersion);
@@ -492,7 +495,7 @@ namespace TwainExtendedImageInfoDemo
             if (use32BitDevice)
                 twainFolderName = "TWAINDSM32";
 
-            string[] binFolderPaths = { @"..\..\Bin", @"..\..\..\..\..\Bin", @"..\..\..\..\..\..\Bin" };
+            string[] binFolderPaths = { @"..\..", @"..\..\Bin", @"..\..\..\..\..\Bin", @"..\..\..\..\..\..\Bin" };
             string binFolderPath = null;
             for (int i = 0; i < binFolderPaths.Length; i++)
             {
