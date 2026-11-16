@@ -17,7 +17,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>    
 
-    <Version>15.5.1.1</Version>
+    <Version>15.5.2.1</Version>
     <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>
 
